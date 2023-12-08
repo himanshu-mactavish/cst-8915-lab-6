@@ -1,0 +1,49 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "Location for all resources."
+      }
+    },
+    "aksClusterName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the AKS cluster."
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.ContainerService/managedClusters",
+      "apiVersion": "2021-05-01",
+      "name": "[parameters('aksClusterName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "dnsPrefix": "[parameters('aksClusterName')]",
+        "agentPoolProfiles": [
+          {
+            "name": "nodepool1",
+            "count": 3,
+            "vmSize": "Standard_B2s",
+            "osType": "Linux",
+            "type": "VirtualMachineScaleSets",
+            "mode": "System"
+          },
+          {
+            "name": "nodepool2",
+            "count": 3,
+            "vmSize": "Standard_B2s",
+            "osType": "Linux",
+            "type": "VirtualMachineScaleSets",
+            "mode": "User"
+          }
+        ],
+        "kubernetesVersion": "1.27.7",
+        "enableRBAC": true
+      }
+    }
+  ]
+}
